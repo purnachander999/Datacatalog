@@ -1,6 +1,7 @@
 from db import db
 import uuid
-from _datetime import datetime
+from datetime import datetime
+
 
 class ItemModel(db.Model):
     __tablename__ = "items"
@@ -10,7 +11,7 @@ class ItemModel(db.Model):
     price = db.Column(db.Float(precision=2), unique=False, nullable=False)
     header = db.Column(db.JSON, nullable=False)
     comments = db.Column(db.String(80), unique=False, nullable=False)
-   # timestamp = db.Column(db.DateTime, nullable=False, default=datetime.strftime(datetime.today(), "%b %d %Y"))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 

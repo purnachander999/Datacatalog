@@ -6,7 +6,7 @@ class PlainItemSchema(Schema):
     price = fields.Float(required=True)
     header = fields.Dict(keys=fields.Str(), values=fields.Str(), required=False)
     comments = fields.Str(required=True)
-    #timestamp = fields.DateTime(dump_only=True)
+    timestamp = fields.DateTime()
 
 
 
