@@ -1,0 +1,7 @@
+venv
+.idea
+__pycache__
+data.db
+*.pyc
+.DS_Store
+working.tct
