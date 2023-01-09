@@ -5,8 +5,8 @@ from flask_migrate import Migrate
 import models
 
 from db import db
-from resources.item import blp as ItemBlueprint
-from resources.store import blp as StoreBlueprint
+from resources.metastore import blp as ItemBlueprint
+from resources.mainstore import blp as StoreBlueprint
 from resources.tag import blp as TagBlueprint
 
 
