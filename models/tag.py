@@ -6,7 +6,7 @@ class TagModel(db.Model):
 
     id = db.Column(db.String(80), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(80), unique=True, nullable=False)
-    store_id = db.Column(db.String(80), db.ForeignKey("stores.id"), nullable=False)
+    mainstore_id = db.Column(db.String(80), db.ForeignKey("mainstore.id"), nullable=False)
 
-    store = db.relationship("StoreModel", back_populates="tags")
-    items = db.relationship("ItemModel", back_populates="tags", secondary="items_tags")
+    mainstore = db.relationship("MainStoreModel", back_populates="tags")
+    metastore = db.relationship("MetastoreModel", back_populates="tags", secondary="metastore_tags")

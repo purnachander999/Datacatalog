@@ -3,27 +3,27 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from db import db
-from models import TagModel, StoreModel, ItemModel
+from models import TagModel, MainStoreModel, MetastoreModel
 from schemas import TagSchema, TagAndItemSchema
 
 blp = Blueprint("Tags", "tags", description="Operations on tags")
 
 
-@blp.route("/store/<string:store_id>/tag")
+@blp.route("/store/<string:mainstore_id>/tag")
 class TagsInStore(MethodView):
     @blp.response(200, TagSchema(many=True))
-    def get(self, store_id):
-        store = StoreModel.query.get_or_404(store_id)
+    def get(self, mainstore_id):
+        store = MainStoreModel.query.get_or_404(mainstore_id)
 
         return store.tags.all()  # lazy="dynamic" means 'tags' is a query
 
     @blp.arguments(TagSchema)
     @blp.response(201, TagSchema)
-    def post(self, tag_data, store_id):
-        # if TagModel.query.filter(TagModel.store_id == store_id).first():
+    def post(self, tag_data, mainstore_id):
+        # if TagModel.query.filter(TagModel.mainstore_id == mainstore_id).first():
         #     abort(400, message="A tag with that name already exists in that store.")
 
-        tag = TagModel(**tag_data, store_id=store_id)
+        tag = TagModel(**tag_data, mainstore_id=mainstore_id)
 
         try:
             db.session.add(tag)
@@ -41,7 +41,7 @@ class TagsInStore(MethodView):
 class LinkTagsToItem(MethodView):
     @blp.response(201, TagSchema)
     def post(self, item_id, tag_id):
-        item = ItemModel.query.get_or_404(item_id)
+        item = MetastoreModel.query.get_or_404(item_id)
         tag = TagModel.query.get_or_404(tag_id)
 
         item.tags.append(tag)
@@ -56,7 +56,7 @@ class LinkTagsToItem(MethodView):
 
     @blp.response(200, TagAndItemSchema)
     def delete(self, item_id, tag_id):
-        item = ItemModel.query.get_or_404(item_id)
+        item = MetastoreModel.query.get_or_404(item_id)
         tag = TagModel.query.get_or_404(tag_id)
 
         item.tags.remove(tag)

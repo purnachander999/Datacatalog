@@ -5,22 +5,22 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from db import db
-from models import StoreModel
+from models import MainStoreModel
 from schemas import StoreSchema
 
 
-blp = Blueprint("Stores", "stores", description="Operations on stores")
+blp = Blueprint("Mainstore", "mainstore", description="Operations on Mainstore")
 
 
-@blp.route("/store/<string:store_id>")
+@blp.route("/store/<string:mainstore_id>")
 class Store(MethodView):
     @blp.response(200, StoreSchema)
-    def get(self, store_id):
-        store = StoreModel.query.get_or_404(store_id)
+    def get(self, mainstore_id):
+        store = MainStoreModel.query.get_or_404(mainstore_id)
         return store
 
-    def delete(self, store_id):
-        store = StoreModel.query.get_or_404(store_id)
+    def delete(self, mainstore_id):
+        store = MainStoreModel.query.get_or_404(mainstore_id)
         db.session.delete(store)
         db.session.commit()
         return {"message": "Store deleted"}, 200
@@ -30,12 +30,12 @@ class Store(MethodView):
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(self):
-        return StoreModel.query.all()
+        return MainStoreModel.query.all()
 
     @blp.arguments(StoreSchema)
     @blp.response(201, StoreSchema)
     def post(self, store_data):
-        store = StoreModel(**store_data)
+        store = MainStoreModel(**store_data)
         print(store)
         try:
             db.session.add(store)
