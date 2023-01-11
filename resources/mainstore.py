@@ -26,6 +26,7 @@ class Store(MethodView):
         db.session.commit()
         return {"message": "Store deleted"}, 200
 
+    @jwt_required()
     @blp.arguments(MainStoreUpdateSchema)
     @blp.response(200, StoreSchema)
     def put(self, main_data, mainstore_id):
