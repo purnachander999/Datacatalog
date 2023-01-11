@@ -2,6 +2,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
+from flask_jwt_extended import jwt_required
 from db import db
 from models import TagModel, MainStoreModel, MetastoreModel
 from schemas import TagSchema, TagAndItemSchema
@@ -17,6 +18,8 @@ class TagsInStore(MethodView):
 
         return store.tags.all()  # lazy="dynamic" means 'tags' is a query
 
+
+    @jwt_required()
     @blp.arguments(TagSchema)
     @blp.response(201, TagSchema)
     def post(self, tag_data, mainstore_id):

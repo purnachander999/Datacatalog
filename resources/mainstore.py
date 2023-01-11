@@ -4,9 +4,10 @@ from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
+from flask_jwt_extended import jwt_required
 from db import db
 from models import MainStoreModel
-from schemas import StoreSchema
+from schemas import StoreSchema, MainStoreUpdateSchema
 
 
 blp = Blueprint("Mainstore", "mainstore", description="Operations on Mainstore")
@@ -25,6 +26,21 @@ class Store(MethodView):
         db.session.commit()
         return {"message": "Store deleted"}, 200
 
+    @blp.arguments(MainStoreUpdateSchema)
+    @blp.response(200, StoreSchema)
+    def put(self, main_data, mainstore_id):
+        mainstore = MainStoreModel.query.get(mainstore_id)
+
+        if mainstore:
+            mainstore.name = main_data["name"]
+            mainstore.description = main_data["description"]
+        else:
+            mainstore = MainStoreModel(id=mainstore_id, **main_data)
+
+        db.session.add(mainstore)
+        db.session.commit()
+
+        return mainstore
 
 @blp.route("/store")
 class StoreList(MethodView):
@@ -32,6 +48,7 @@ class StoreList(MethodView):
     def get(self):
         return MainStoreModel.query.all()
 
+    @jwt_required()
     @blp.arguments(StoreSchema)
     @blp.response(201, StoreSchema)
     def post(self, store_data):

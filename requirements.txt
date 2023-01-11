@@ -7,3 +7,5 @@ passlib
 marshmallow
 python-dotenv
 gunicorn
+flask-jwt-extended
+passlib

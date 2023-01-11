@@ -42,8 +42,18 @@ class TagSchema(PlainTagSchema):
     metastore = fields.List(fields.Nested(PlainItemSchema()), dump_only=True)
     mainstore = fields.Nested(PlainStoreSchema(), dump_only=True)
 
-
 class TagAndItemSchema(Schema):
     message = fields.Str()
     metastore = fields.Nested(ItemSchema)
     tag = fields.Nested(TagSchema)
+
+
+class UserSchema(Schema):
+    id = fields.Str(dump_only=True)
+    username = fields.Str(required=True)
+    password = fields.Str(required=True)
+
+class MainStoreUpdateSchema(Schema):
+    name = fields.Str()
+    description = fields.Str()
+
