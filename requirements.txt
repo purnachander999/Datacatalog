@@ -1,5 +1,6 @@
+flask
 Flask-JWT-Extended
-Flask-Smorest
+flask_smorest
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-MySQLdb
@@ -9,3 +10,6 @@ python-dotenv
 gunicorn
 flask-jwt-extended
 passlib
+pytest
+pytest-flask
+flask_testing
