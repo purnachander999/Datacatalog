@@ -13,8 +13,8 @@ from schemas import StoreSchema, MainStoreUpdateSchema
 blp = Blueprint("Mainstore", "mainstore", description="Operations on Mainstore")
 
 
-@blp.route("/store/<string:mainstore_id>")
-class Store(MethodView):
+@blp.route("/mainstore/<string:mainstore_id>")
+class MainStore(MethodView):
     @blp.response(200, StoreSchema)
     def get(self, mainstore_id):
         store = MainStoreModel.query.get_or_404(mainstore_id)
@@ -43,8 +43,8 @@ class Store(MethodView):
 
         return mainstore
 
-@blp.route("/store")
-class StoreList(MethodView):
+@blp.route("/mainstore")
+class MainStoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(self):
         return MainStoreModel.query.all()

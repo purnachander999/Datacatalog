@@ -10,40 +10,40 @@ from schemas import ItemSchema, ItemUpdateSchema
 blp = Blueprint("Metastore", "metastore", description="Operations on metastore")
 
 
-@blp.route("/item/<string:item_id>")
-class Item(MethodView):
-    @jwt_required()
-    @blp.response(200, ItemSchema)
-    def get(self, item_id):
-        item = MetastoreModel.query.get_or_404(item_id)
-        return item
+@blp.route("/metastore/<string:metastore_id>")
+class Metastore(MethodView):
 
-    def delete(self, item_id):
-        item = MetastoreModel.query.get_or_404(item_id)
-        db.session.delete(item)
+    @blp.response(200, ItemSchema)
+    def get(self, metastore_id):
+        metastore = MetastoreModel.query.get_or_404(metastore_id)
+        return metastore
+
+    def delete(self, metastore_id):
+        item = MetastoreModel.query.get_or_404(metastore_id)
+        db.session.delete(metastore_id)
         db.session.commit()
-        return {"message": "Item deleted."}
+        return {"message": "Metastore deleted."}
 
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)
-    def put(self, item_data, item_id):
-        item = MetastoreModel.query.get(item_id)
+    def put(self, metastore_data, metastore_id):
+        metastore = MetastoreModel.query.get(metastore_id)
 
-        if item:
-            item.price = item_data["price"]
-            item.name = item_data["name"]
+        if metastore:
+            #metastore.source = metastore_data["source"]
+            metastore.name = metastore_data["name"]
         else:
-            item = MetastoreModel(id=item_id, **item_data)
+            metastore = MetastoreModel(id=metastore_id, **metastore_data)
 
-        db.session.add(item)
+        db.session.add(metastore)
         db.session.commit()
 
-        return item
+        return metastore
 
 
-@blp.route("/item")
-class ItemList(MethodView):
-    @jwt_required()
+@blp.route("/metastore")
+class MetastoreList(MethodView):
+
     @blp.response(200, ItemSchema(many=True))
     def get(self):
         return MetastoreModel.query.all()
@@ -51,13 +51,13 @@ class ItemList(MethodView):
     @jwt_required()
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
-    def post(self, item_data):
-        item = MetastoreModel(**item_data)
+    def post(self, metastore_data):
+        metastore = MetastoreModel(**metastore_data)
 
         try:
-            db.session.add(item)
+            db.session.add(metastore)
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while inserting the item.")
 
-        return item
+        return metastore

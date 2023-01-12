@@ -6,7 +6,7 @@ from datetime import datetime
 class MetastoreModel(db.Model):
     __tablename__ = "metastore"
 
-    id = db.Column(db.String(80), primary_key=True, default=uuid.uuid4)
+    metastore_id = db.Column(db.String(80), primary_key=True, default=uuid.uuid4)
     name = db.Column(db.String(80), unique=False, nullable=False)
     headers = db.Column(db.JSON, nullable=False)
     trans_comments = db.Column(db.String(80), unique=False, nullable=False)
@@ -16,7 +16,7 @@ class MetastoreModel(db.Model):
 
 
     mainstore_id = db.Column(
-        db.String(80), db.ForeignKey("mainstore.id"), unique=False, nullable=False
+        db.String(80), db.ForeignKey("mainstore.mainstore_id"), unique=False, nullable=False
     )
     mainstore = db.relationship("MainStoreModel", back_populates="metastore")
 

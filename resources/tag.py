@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from flask_jwt_extended import jwt_required
 from db import db
 from models import TagModel, MainStoreModel, MetastoreModel
-from schemas import TagSchema, TagAndItemSchema
+from schemas import TagSchema, TagAndItemSchema,TagUpdateSchema
 
 blp = Blueprint("Tags", "tags", description="Operations on tags")
 
@@ -36,7 +36,22 @@ class TagsInStore(MethodView):
                 500,
                 message=str(e),
             )
+        return tag
 
+@blp.route("/tag/<string:tag_id>")
+class TagList(MethodView):
+
+    @blp.arguments(TagUpdateSchema)
+    @blp.response(200, TagSchema)
+    def put(self, tag_data, tag_id):
+        tag = TagModel.query.get(tag_id)
+        if tag:
+            tag.name = tag_data["name"]
+        else:
+            tag = MetastoreModel(id=tag_id, **tag_data)
+
+        db.session.add(tag)
+        db.session.commit()
         return tag
 
 
@@ -79,6 +94,9 @@ class Tag(MethodView):
     def get(self, tag_id):
         tag = TagModel.query.get_or_404(tag_id)
         return tag
+
+
+
 
     @blp.response(
         202,
