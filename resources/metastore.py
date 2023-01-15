@@ -19,10 +19,10 @@ class Metastore(MethodView):
         return metastore
 
     def delete(self, metastore_id):
-        item = MetastoreModel.query.get_or_404(metastore_id)
+        metastore_id = MetastoreModel.query.get_or_404(metastore_id)
         db.session.delete(metastore_id)
         db.session.commit()
-        return {"message": "Metastore deleted."}
+        return {"message": "Metastore deleted"}
 
     @blp.arguments(ItemUpdateSchema)
     @blp.response(200, ItemSchema)

@@ -55,6 +55,6 @@ def created_tag_id(client, created_store_id):
         f"/mainstore/{created_store_id}/tag",
         json={"name": "Test Tag"},
     )
-    return response.json()["tag_id"]
+    return response.json["tag_id"]
 
 

@@ -13,3 +13,4 @@ passlib
 pytest
 pytest-flask
 flask_testing
+pytest-ordering

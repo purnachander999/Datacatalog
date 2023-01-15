@@ -1,5 +1,5 @@
-
-
+import pytest
+@pytest.mark.run(order=1)
 def test_all_store_before_creation(client):
     response = client.get(
         "/mainstore",
@@ -7,7 +7,7 @@ def test_all_store_before_creation(client):
 
     assert response.status_code == 200
     assert type(response.json) == list
-
+@pytest.mark.run(order=2)
 def test_get_store(client, created_store_id):
     response = client.get(
         f"/mainstore/{created_store_id}",
@@ -16,7 +16,7 @@ def test_get_store(client, created_store_id):
     assert response.status_code == 200
     # assert response.json["name"] == "Test Store"
     # assert response.json["description"] == "my description"
-
+@pytest.mark.run(order=3)
 def test_get_store_name(client, created_store_id):
     response = client.get(
         f"/mainstore/{created_store_id}",
@@ -25,6 +25,7 @@ def test_get_store_name(client, created_store_id):
     assert response.status_code == 200
     assert response.json["name"] == "Test Store"
 
+@pytest.mark.run(order=4)
 def test_get_store_description(client, created_store_id):
     response = client.get(
         f"/mainstore/{created_store_id}",
@@ -33,7 +34,7 @@ def test_get_store_description(client, created_store_id):
     assert response.status_code == 200
     assert response.json["description"] == "my description"
 
-
+@pytest.mark.run(order=5)
 def test_get_store_description_again(client, created_store_id):
     response = client.get(
         f"/mainstore/{created_store_id}",
@@ -42,7 +43,7 @@ def test_get_store_description_again(client, created_store_id):
     assert response.status_code == 200
     assert response.json["description"] == "my description"
 
-
+@pytest.mark.run(order=6)
 def test_get_store_not_found(client):
     response = client.get(
         "/mainstore/1",
@@ -51,7 +52,7 @@ def test_get_store_not_found(client):
     assert response.status_code == 404
     assert response.json == {"code": 404, "status": "Not Found"}
 
-
+@pytest.mark.run(order=7)
 def test_get_store_with_item(client, created_store_id):
     client.post(
         "/metastore",
@@ -69,11 +70,11 @@ def test_get_store_with_item(client, created_store_id):
     assert response.status_code == 200
     assert response.json["metastore"][0]["name"] == "store with item"
 
-
+@pytest.mark.run(order=8)
 def test_get_store_with_tag(client, created_store_id):
     client.post(
         f"/mainstore/{created_store_id}/tag",
-        json={"name": "Test Tag"},
+        json={"name": "Test Tag creation"},
     )
 
     response = client.get(
@@ -81,9 +82,9 @@ def test_get_store_with_tag(client, created_store_id):
     )
 
     assert response.status_code == 200
-    assert response.json["tags"][0]["name"] == "Test Tag"
+    assert response.json["tags"][0]["name"] == "Test Tag creation"
 
-
+@pytest.mark.run(order=9)
 def test_create_store(client):
     response = client.post(
         "/mainstore",
@@ -93,7 +94,7 @@ def test_create_store(client):
     assert response.status_code == 201
     assert response.json["name"] == "Creating new store"
 
-
+@pytest.mark.run(order=10)
 def test_create_store_with_items(client, created_store_id):
     client.post(
         "/metastore",
@@ -111,7 +112,7 @@ def test_create_store_with_items(client, created_store_id):
 
     assert response.status_code == 200
 
-
+@pytest.mark.run(order=11)
 def test_delete_store(client):
     response = client.post(
         "/mainstore",
@@ -129,7 +130,7 @@ def test_delete_store(client):
     assert response.status_code == 200
     assert response.json == {"message": "Store deleted"}
 
-
+@pytest.mark.run(order=12)
 def test_delete_store_doesnt_exist(client):
     response = client.delete(
         "/mainstore/1",
@@ -140,7 +141,7 @@ def test_delete_store_doesnt_exist(client):
 
 
 
-
+@pytest.mark.run(order=13)
 def test_get_store_list_single(client):
     resp = client.post(
         "/mainstore",
@@ -155,7 +156,7 @@ def test_get_store_list_single(client):
 
     assert response.status_code == 200
 
-
+@pytest.mark.run(order=14)
 def test_get_store_list_multiple(client):
     client.post(
         "/mainstore",
@@ -172,6 +173,7 @@ def test_get_store_list_multiple(client):
 
     assert response.status_code == 200
 
+@pytest.mark.run(order=15)
 def test_get_store_list_with_items(client):
     simple_strore = client.post(
         "/mainstore",
@@ -195,7 +197,7 @@ def test_get_store_list_with_items(client):
     assert response.status_code == 200
     assert type(response.json) == list
 
-
+@pytest.mark.run(order=16)
 def test_get_store_list_with_tags(client):
     resp = client.post(
         "/mainstore",
@@ -212,6 +214,7 @@ def test_get_store_list_with_tags(client):
     assert response.status_code == 200
     assert type(response.json) == list
 
+@pytest.mark.run(order=17)
 def test_create_store_duplicate_name(client):
     client.post(
         "/mainstore",
