@@ -30,7 +30,6 @@ class Metastore(MethodView):
         metastore = MetastoreModel.query.get(metastore_id)
 
         if metastore:
-            #metastore.source = metastore_data["source"]
             metastore.name = metastore_data["name"]
         else:
             metastore = MetastoreModel(id=metastore_id, **metastore_data)
@@ -48,7 +47,7 @@ class MetastoreList(MethodView):
     def get(self):
         return MetastoreModel.query.all()
 
-    @jwt_required()
+    #@jwt_required()
     @blp.arguments(ItemSchema)
     @blp.response(201, ItemSchema)
     def post(self, metastore_data):

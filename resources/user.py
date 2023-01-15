@@ -7,7 +7,7 @@ from flask_jwt_extended import create_access_token
 
 from db import db
 from models import TagModel, MainStoreModel, MetastoreModel, UserModel
-from schemas import TagSchema, TagAndItemSchema, UserSchema
+from schemas import TagSchema, TagAndItemSchema, UserSchema, UserUpdateSchema
 
 
 blp = Blueprint("Users", "users", description="Operations on users")
@@ -15,6 +15,7 @@ blp = Blueprint("Users", "users", description="Operations on users")
 @blp.route("/register")
 class UserRegister(MethodView):
     @blp.arguments(UserSchema)
+    @blp.response(201, UserSchema)
     def post(self, user_data):
         print("*******************")
         print(UserModel.username)
@@ -24,13 +25,13 @@ class UserRegister(MethodView):
 
         user = UserModel(
             username = user_data["username"],
-            password = pbkdf2_sha256.hash(user_data["password"])
+            password = user_data["password"]
         )
 
         db.session.add(user)
         db.session.commit()
 
-        return {"message" : "user created sucessully"}, 201
+        return user
 
 @blp.route("/login")
 class UserLogin(MethodView):
@@ -45,7 +46,7 @@ class UserLogin(MethodView):
         user = UserModel.query.filter(
             UserModel.username == user_data["username"]
         ).first()
-        if user and pbkdf2_sha256.verify(user_data["password"], user.password):
+        if user and (user_data["password"] == user.password):
             print("verified")
             access_token = create_access_token(identity=user.user_id)
             return {"access_token": access_token}
@@ -54,9 +55,22 @@ class UserLogin(MethodView):
 
 @blp.route("/user/<string:user_id>")
 class User(MethodView):
-    @blp.response(200, UserSchema)
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
+        return user
+    @blp.arguments(UserUpdateSchema)
+    @blp.response(200, UserSchema)
+    def put(self, user_data, user_id):
+        user = UserModel.query.get(user_id)
+
+        if user:
+            user.password = user_data["password"]
+        else:
+            user = MetastoreModel(id=user_id, **user_data)
+
+        db.session.add(user)
+        db.session.commit()
+
         return user
 
 

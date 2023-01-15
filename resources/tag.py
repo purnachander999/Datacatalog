@@ -10,7 +10,7 @@ from schemas import TagSchema, TagAndItemSchema,TagUpdateSchema
 blp = Blueprint("Tags", "tags", description="Operations on tags")
 
 
-@blp.route("/store/<string:mainstore_id>/tag")
+@blp.route("/mainstore/<string:mainstore_id>/tag")
 class TagsInStore(MethodView):
     @blp.response(200, TagSchema(many=True))
     def get(self, mainstore_id):
@@ -19,7 +19,7 @@ class TagsInStore(MethodView):
         return store.tags.all()  # lazy="dynamic" means 'tags' is a query
 
 
-    @jwt_required()
+
     @blp.arguments(TagSchema)
     @blp.response(201, TagSchema)
     def post(self, tag_data, mainstore_id):
@@ -55,17 +55,17 @@ class TagList(MethodView):
         return tag
 
 
-@blp.route("/item/<string:item_id>/tag/<string:tag_id>")
+@blp.route("/metastore/<string:metastore_id>/tag/<string:tag_id>")
 class LinkTagsToItem(MethodView):
     @blp.response(201, TagSchema)
-    def post(self, item_id, tag_id):
-        item = MetastoreModel.query.get_or_404(item_id)
+    def post(self, metastore_id, tag_id):
+        metastore = MetastoreModel.query.get_or_404(metastore_id)
         tag = TagModel.query.get_or_404(tag_id)
 
-        item.tags.append(tag)
+        metastore.tags.append(tag)
 
         try:
-            db.session.add(item)
+            db.session.add(metastore)
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while inserting the tag.")
@@ -73,19 +73,26 @@ class LinkTagsToItem(MethodView):
         return tag
 
     @blp.response(200, TagAndItemSchema)
-    def delete(self, item_id, tag_id):
-        item = MetastoreModel.query.get_or_404(item_id)
+    def delete(self, metastore_id, tag_id):
+        metastore = MetastoreModel.query.get_or_404(metastore_id)
         tag = TagModel.query.get_or_404(tag_id)
 
-        item.tags.remove(tag)
+        metastore.tags.remove(tag)
 
         try:
-            db.session.add(item)
+            db.session.add(metastore)
             db.session.commit()
         except SQLAlchemyError:
             abort(500, message="An error occurred while inserting the tag.")
 
         return {"message": "Item removed from tag", "item": item, "tag": tag}
+
+
+@blp.route("/tag")
+class Get_all_tags(MethodView):
+    @blp.response(200, TagSchema(many=True))
+    def get(self):
+        return TagModel.query.all()
 
 
 @blp.route("/tag/<string:tag_id>")

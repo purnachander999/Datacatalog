@@ -14,7 +14,9 @@ from resources.user import blp as UserBlueprint
 
 
 def create_app(db_url=None):
+    print(" I am in create function")
     app = Flask(__name__)
+    app.config["SQLALCHEMY_SILENCE_UBER_WARNING"] = 1
     app.config["API_TITLE"] = "Datacatalog REST API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"

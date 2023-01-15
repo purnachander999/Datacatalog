@@ -3,7 +3,7 @@ from marshmallow import Schema, fields
 class PlainItemSchema(Schema):
     metastore_id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
-    headers = fields.Dict(keys=fields.Str(), values=fields.Str(), required=False)
+    field_names = fields.Dict(keys=fields.Str(), values=fields.Str(), required=False)
     trans_comments = fields.Str(required=True)
     source = fields.Str(required=True)
     timestamp = fields.DateTime()
@@ -59,3 +59,6 @@ class MainStoreUpdateSchema(Schema):
 
 class TagUpdateSchema(Schema):
     name = fields.Str()
+
+class UserUpdateSchema(Schema):
+    password = fields.Str()

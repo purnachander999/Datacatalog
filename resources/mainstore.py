@@ -26,7 +26,6 @@ class MainStore(MethodView):
         db.session.commit()
         return {"message": "Store deleted"}, 200
 
-    @jwt_required()
     @blp.arguments(MainStoreUpdateSchema)
     @blp.response(200, StoreSchema)
     def put(self, main_data, mainstore_id):
@@ -49,7 +48,7 @@ class MainStoreList(MethodView):
     def get(self):
         return MainStoreModel.query.all()
 
-    @jwt_required()
+
     @blp.arguments(StoreSchema)
     @blp.response(201, StoreSchema)
     def post(self, store_data):
@@ -61,7 +60,7 @@ class MainStoreList(MethodView):
         except IntegrityError:
             abort(
                 400,
-                message="A store with that name  chandu already exists.",
+                message="A store with that name already exists.",
             )
         except SQLAlchemyError:
             abort(500, message="An error occurred creating the store.")
