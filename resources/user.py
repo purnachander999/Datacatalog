@@ -55,9 +55,12 @@ class UserLogin(MethodView):
 
 @blp.route("/user/<string:user_id>")
 class User(MethodView):
+
+    @blp.response(200, UserSchema)
     def get(self, user_id):
         user = UserModel.query.get_or_404(user_id)
         return user
+
     @blp.arguments(UserUpdateSchema)
     @blp.response(200, UserSchema)
     def put(self, user_data, user_id):

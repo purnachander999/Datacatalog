@@ -29,6 +29,8 @@ def create_app(db_url=None):
     #app.config["SQLALCHEMY_DATABASE_URI"] = db_url or "sqlite:///data.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
+    app.config['REDIS_OM_URL'] = 'redis://localhost:6379'
+
     db.init_app(app)
     migrate = Migrate(app, db)
     api = Api(app)

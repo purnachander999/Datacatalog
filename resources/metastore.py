@@ -1,6 +1,8 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
+import json
+import redis
 
 from flask_jwt_extended import jwt_required
 from db import db
@@ -9,9 +11,17 @@ from schemas import ItemSchema, ItemUpdateSchema
 
 blp = Blueprint("Metastore", "metastore", description="Operations on metastore")
 
-
 @blp.route("/metastore/<string:metastore_id>")
 class Metastore(MethodView):
+
+    # def __init__(self):
+    #     self.r = redis.Redis(host='localhost', port=6379, db=0)
+    #
+    #     json_data = self.r.get('meta_data')
+    #     meta_store_data = json.loads(json_data)
+    #     # todo :  need to query for mainstore_id from mainstore table because it is foreign key in metastore table
+    #     # todo : currently only working on REST-API , will chek when User interface is  build
+    #     return meta_store_data
 
     @blp.response(200, ItemSchema)
     def get(self, metastore_id):
