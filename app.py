@@ -6,15 +6,14 @@ import models
 import secrets
 from flask_jwt_extended import JWTManager, create_access_token
 from db import db
-from resources.metastore import blp as ItemBlueprint
-from resources.mainstore import blp as StoreBlueprint
+from resources.metastore import blp as MetaStoreBlueprint
+from resources.mainstore import blp as MainStoreBlueprint
 from resources.tag import blp as TagBlueprint
 from resources.user import blp as UserBlueprint
 
 
 
 def create_app(db_url=None):
-    print(" I am in create function")
     app = Flask(__name__)
     app.config["SQLALCHEMY_SILENCE_UBER_WARNING"] = 1
     app.config["API_TITLE"] = "Datacatalog REST API"
@@ -66,8 +65,8 @@ def create_app(db_url=None):
     with app.app_context():
         db.create_all()
 
-    api.register_blueprint(ItemBlueprint)
-    api.register_blueprint(StoreBlueprint)
+    api.register_blueprint(MetaStoreBlueprint)
+    api.register_blueprint(MainStoreBlueprint)
     api.register_blueprint(TagBlueprint)
     api.register_blueprint(UserBlueprint)
 

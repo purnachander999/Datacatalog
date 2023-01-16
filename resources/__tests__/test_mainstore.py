@@ -53,10 +53,10 @@ def test_get_store_not_found(client):
     assert response.json == {"code": 404, "status": "Not Found"}
 
 @pytest.mark.run(order=7)
-def test_get_store_with_item(client, created_store_id):
+def test_get_mainstore_with_metastore(client, created_store_id):
     client.post(
         "/metastore",
-        json={"name": "store with item",
+        json={"name": "store with metastore",
               "field_names": {"Emp_id": "Integer", "Ename": "String"},
               "trans_comments": "some comments",
               "source": "somesource",
@@ -68,7 +68,7 @@ def test_get_store_with_item(client, created_store_id):
     )
 
     assert response.status_code == 200
-    assert response.json["metastore"][0]["name"] == "store with item"
+    assert response.json["metastore"][0]["name"] == "store with metastore"
 
 @pytest.mark.run(order=8)
 def test_get_store_with_tag(client, created_store_id):
@@ -95,10 +95,10 @@ def test_create_store(client):
     assert response.json["name"] == "Creating new store"
 
 @pytest.mark.run(order=10)
-def test_create_store_with_items(client, created_store_id):
+def test_create_mainstore_with_metastores(client, created_store_id):
     client.post(
         "/metastore",
-        json={"name": "store with items",
+        json={"name": "store with metatores",
               "field_names": {"Emp_id": "Integer", "Ename": "String"},
               "trans_comments": "some comments",
               "source": "somesource",

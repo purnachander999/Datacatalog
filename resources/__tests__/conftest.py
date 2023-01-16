@@ -37,7 +37,7 @@ def created_store_id(client):
 
 
 @pytest.fixture(scope="session")
-def created_item_id(client, created_store_id):
+def created_metastore_id(client, created_store_id):
     response = client.post(
         "/metastore",
         json={"name": "Test Item",
